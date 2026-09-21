@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | Bab 1 - Pelaku Utama Rantai Pasok</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    
+    <style>
+      /* 1. Paksa layar penuh khusus untuk HP/Mobile */
+      .unity-mobile { width: 100% !important; height: 100% !important; }
+      
+      /* 2. Paksa layar penuh di PC HANYA saat tombol fullscreen ditekan */
+      #unity-container:fullscreen, #unity-container:fullscreen #unity-canvas { width: 100vw !important; height: 100vh !important; }
+      #unity-container:-webkit-full-screen, #unity-container:-webkit-full-screen #unity-canvas { width: 100vw !important; height: 100vh !important; }
+      canvas:fullscreen { width: 100vw !important; height: 100vh !important; }
+      canvas:-webkit-full-screen { width: 100vw !important; height: 100vh !important; }
+    </style>
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=854 height=480 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <!-- <div id="unity-fullscreen-button"></div> -->
+        <div id="unity-build-title">Bab 1 - Pelaku Utama Rantai Pasok</div>
+      </div>
+    </div>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/Bab 1 (SIMULASI) 3. Pelaku Utama Rantai Pasok.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/Bab 1 (SIMULASI) 3. Pelaku Utama Rantai Pasok.data.unityweb",
+        frameworkUrl: buildUrl + "/Bab 1 (SIMULASI) 3. Pelaku Utama Rantai Pasok.framework.js.unityweb",
+        codeUrl: buildUrl + "/Bab 1 (SIMULASI) 3. Pelaku Utama Rantai Pasok.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Kemendikdasmen",
+        productName: "Bab 1 - Pelaku Utama Rantai Pasok",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+      } else {
+        canvas.style.width = "854px";
+        canvas.style.height = "480px";
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          document.querySelector("#unity-loading-bar").style.display = "none";
+          document.querySelector("#unity-fullscreen-button").onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
