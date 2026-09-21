@@ -9,9 +9,15 @@
     
     <!-- Tambahkan blok CSS ini -->
     <style>
-      body { padding: 0; margin: 0; overflow: hidden; background-color: black; }
-      #unity-container { position: absolute; left: 0; top: 0; width: 100vw !important; height: 100vh !important; }
-      #unity-canvas { width: 100% !important; height: 100% !important; }
+      /* 1. Paksa 100% HANYA untuk perangkat HP (berdasarkan class bawaan Unity) */
+      .unity-mobile { width: 100% !important; height: 100% !important; }
+      
+      /* 2. Paksa 100% HANYA saat masuk ke mode Fullscreen di PC maupun HP */
+      #unity-container:fullscreen { width: 100vw !important; height: 100vh !important; }
+      #unity-container:fullscreen #unity-canvas { width: 100% !important; height: 100% !important; }
+      
+      #unity-container:-webkit-full-screen { width: 100vw !important; height: 100vh !important; }
+      #unity-container:-webkit-full-screen #unity-canvas { width: 100% !important; height: 100% !important; }
     </style>
   </head>
   <body>
